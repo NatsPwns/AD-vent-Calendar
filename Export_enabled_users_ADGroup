@@ -1,0 +1,10 @@
+Import-Module ActiveDirectory
+
+$GroupName = "R-G-DataRpt-Tabl-Exception"
+
+Get-ADGroupMember -Identity $GroupName -Recursive |
+    Where-Object { $_.objectClass -eq "user" } |
+    Get-ADUser -Properties Enabled, DisplayName, SamAccountName, UserPrincipalName |
+    Where-Object { $_.Enabled -eq $true } |
+    Select-Object DisplayName, SamAccountName, UserPrincipalName |
+    Export-Csv "C:\Temp\ActiveUsers.csv" -NoTypeInformation
